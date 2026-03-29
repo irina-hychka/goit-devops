@@ -23,3 +23,17 @@ chmod u+x install_dev_tools.sh
 ```bash
 sudo ./install_dev_tools.sh
 ```
+
+## Screenshots
+
+### 1. Unsupported OS check (macOS)
+The script correctly detects a non-Linux environment and exits with an appropriate error message.
+
+![Unsupported OS](screenshots/unsupported_os.png)
+
+---
+
+### 2. Successful installation (Linux)
+The script runs successfully on a supported Linux system, installs missing tools, and skips already installed components.
+
+![Successful installation](screenshots/linux_successful_install.png)
