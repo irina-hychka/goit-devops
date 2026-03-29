@@ -144,21 +144,22 @@ install_docker() {
 
 # ---------- Docker Compose installation ----------
 install_docker_compose() {
-    # Check Docker Compose v2 plugin first
-    if docker compose version >/dev/null 2>&1; then
-        log_skip "Docker Compose plugin is already available: $(docker compose version)"
+    # Check Docker Compose v2 plugin
+    if docker compose version &>/dev/null; then
+        log_skip "Docker Compose plugin already available: $(docker compose version)"
         return
     fi
 
-    # Check legacy docker-compose command
-    if command -v docker-compose >/dev/null 2>&1; then
-        log_skip "Legacy Docker Compose is already installed: $(docker-compose --version)"
+    # Try installing plugin (Ubuntu/Debian)
+    if apt-get install -y -qq docker-compose-plugin 2>/dev/null; then
+        log_success "Docker Compose plugin installed: $(docker compose version)"
         return
     fi
 
-    log_info "Installing Docker Compose plugin..."
-    apt-get install -y -qq docker-compose-plugin
-    log_success "Docker Compose installed successfully: $(docker compose version)"
+    # Fallback for Kali or other systems
+    log_info "docker-compose-plugin not available, installing legacy docker-compose..."
+    apt-get install -y -qq docker-compose
+    log_success "Docker Compose installed: $(docker-compose --version)"
 }
 
 # ---------- Python installation ----------
