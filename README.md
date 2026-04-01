@@ -14,7 +14,7 @@ All services are containerized and connected via Docker Compose.
 ---
 
 ## Project Structure
-
+```
 project-root/
 ├── app/
 │   ├── core/
@@ -50,6 +50,7 @@ project-root/
 └── README.md
 
 ---
+```
 
 ## Services
 
