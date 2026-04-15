@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Terraform
+lesson-7/.terraform/
+lesson-7/*.tfstate
+lesson-7/*.tfstate.backup
+lesson-7/.terraform.lock.hcl
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Local Docker Compose
+docker-compose.yml

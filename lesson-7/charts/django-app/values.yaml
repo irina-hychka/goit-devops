@@ -1,0 +1,40 @@
+# Number of application replicas
+replicaCount: 2
+
+# Container image settings
+image:
+  repository: 712242347745.dkr.ecr.us-west-2.amazonaws.com/lesson-7-django
+  tag: "latest"
+  pullPolicy: Always
+
+# Kubernetes Service configuration
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8000
+
+# Horizontal Pod Autoscaler configuration
+autoscaler:
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+# Resource requests and limits for the container
+resources:
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+# Environment variables passed to the application through ConfigMap
+config:
+  DJANGO_SETTINGS_MODULE: "core.settings"
+  DEBUG: "False"
+  ALLOWED_HOSTS: "*"
+  POSTGRES_HOST: "db"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "django_db"
+  POSTGRES_USER: "django_user"
+  POSTGRES_PASSWORD: "pass9764gd"
