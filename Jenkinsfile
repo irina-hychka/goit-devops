@@ -39,16 +39,18 @@ pipeline {
         stage('Update Helm values') {
             steps {
                 container('git') {
-                    sh """
-                    git config --global user.email "jenkins@example.com"
-                    git config --global user.name "jenkins"
+                    sh '''
+                        git config --global user.email "jenkins@example.com"
+                        git config --global user.name "jenkins"
 
-                    sed -i 's/tag: .*/tag: "${IMAGE_TAG}"/' Project/charts/django-app/values.yaml
+                        git config --global --add safe.directory /home/jenkins/agent/workspace/django-ci-cd
 
-                    git add Project/charts/django-app/values.yaml
-                    git commit -m "Update image tag to ${IMAGE_TAG}" || true
-                    git push origin ${BRANCH}
-                    """
+                        sed -i 's/tag: .*/tag: "2"/' Project/charts/django-app/values.yaml
+
+                        git add Project/charts/django-app/values.yaml
+                        git commit -m "Update image tag to 2"
+                        git push origin lesson-8-9
+                    '''
                 }
             }
         }
