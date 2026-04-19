@@ -39,18 +39,23 @@ pipeline {
         stage('Update Helm values') {
             steps {
                 container('git') {
-                    sh '''
-                        git config --global user.email "jenkins@example.com"
-                        git config --global user.name "jenkins"
+                    withCredentials([usernamePassword(
+                        credentialsId: 'github-creds',
+                        usernameVariable: 'GIT_USERNAME',
+                        passwordVariable: 'GIT_PASSWORD'
+                    )]) {
+                        sh """
+                            git config --global user.email "jenkins@example.com"
+                            git config --global user.name "jenkins"
+                            git config --global --add safe.directory /home/jenkins/agent/workspace/django-ci-cd
 
-                        git config --global --add safe.directory /home/jenkins/agent/workspace/django-ci-cd
+                            sed -i 's/tag: .*/tag: "${IMAGE_TAG}"/' Project/charts/django-app/values.yaml
 
-                        sed -i 's/tag: .*/tag: "2"/' Project/charts/django-app/values.yaml
-
-                        git add Project/charts/django-app/values.yaml
-                        git commit -m "Update image tag to 2"
-                        git push origin lesson-8-9
-                    '''
+                            git add Project/charts/django-app/values.yaml
+                            git commit -m "Update image tag to ${IMAGE_TAG}" || true
+                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/irina-hychka/goit-devops lesson-8-9
+                        """
+                    }
                 }
             }
         }
