@@ -1,0 +1,19 @@
+applications:
+  - name: django-app
+    namespace: argocd
+    project: default
+    source:
+      repoURL: "https://github.com/irina-hychka/goit-devops"
+      targetRevision: "lesson-8-9"
+      path: "charts/django-app"
+    destination:
+      server: "https://kubernetes.default.svc"
+      namespace: "django-app"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+
+repositories: []

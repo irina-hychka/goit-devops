@@ -1,0 +1,26 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Mac
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Env
+.env
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Kubernetes / Helm temp
+*.tmp

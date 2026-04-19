@@ -1,0 +1,79 @@
+serviceAccount:
+  create: false
+  name: ${service_account}
+
+serviceAccountAgent:
+  create: false
+  name: ${service_account}
+
+controller:
+  serviceType: LoadBalancer
+
+  image:
+    tag: "2.492.1-jdk21"
+
+  admin:
+    username: admin
+    password: admin123
+
+  installPlugins:
+    - kubernetes:latest
+    - workflow-aggregator:latest
+    - git:latest
+    - configuration-as-code:latest
+    - amazon-ecr:latest
+    - pipeline-aws:latest
+    - docker-workflow:latest
+    - credentials-binding:latest
+    - job-dsl:latest
+
+  installLatestPlugins: true
+  installLatestSpecifiedPlugins: false
+  initializeOnce: true
+
+  JCasC:
+    configScripts:
+      pipeline-job: |
+        jobs:
+          - script: >
+              pipelineJob('django-ci-cd') {
+                definition {
+                  cpsScm {
+                    scm {
+                      git {
+                        remote {
+                          url('${github_repo_url}')
+                        }
+                        branch('*/lesson-8-9')
+                      }
+                    }
+                    scriptPath('lesson-8-9/Jenkinsfile')
+                  }
+                }
+              }
+
+agent:
+  enabled: true
+  useDefaultServiceAccount: true
+  serviceAccount: ${service_account}
+
+  podTemplates:
+    kaniko: |
+      - name: kaniko
+        label: kaniko
+        serviceAccount: ${service_account}
+        containers:
+          - name: kaniko
+            image: gcr.io/kaniko-project/executor:debug
+            command: /busybox/cat
+            ttyEnabled: true
+          - name: git
+            image: alpine/git:latest
+            command: cat
+            ttyEnabled: true
+
+persistence:
+  enabled: true
+  storageClass: gp2
+  accessMode: ReadWriteOnce
+  size: 10Gi
