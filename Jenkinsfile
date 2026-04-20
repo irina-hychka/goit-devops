@@ -10,7 +10,7 @@ pipeline {
         ECR_REPO = '712242347745.dkr.ecr.us-west-2.amazonaws.com/lesson-8-9-django-app'
         IMAGE_TAG = "${BUILD_NUMBER}"
         GIT_REPO = 'https://github.com/irina-hychka/goit-devops'
-        BRANCH = 'lesson-8-9'
+        BRANCH = 'lesson-db-module'
     }
 
     stages {
@@ -53,7 +53,7 @@ pipeline {
 
                             git add Project/charts/django-app/values.yaml
                             git commit -m "Update image tag to ${IMAGE_TAG}" || true
-                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/irina-hychka/goit-devops lesson-8-9
+                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/irina-hychka/goit-devops lesson-db-module
                         """
                     }
                 }

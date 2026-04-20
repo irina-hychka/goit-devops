@@ -44,7 +44,7 @@ controller:
                         remote {
                           url('${github_repo_url}')
                         }
-                        branch('*/lesson-8-9')
+                        branch('*/lesson-db-module')
                       }
                     }
                     scriptPath('Jenkinsfile')

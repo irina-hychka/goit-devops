@@ -4,7 +4,7 @@ applications:
     project: default
     source:
       repoURL: "https://github.com/irina-hychka/goit-devops"
-      targetRevision: "lesson-8-9"
+      targetRevision: "lesson-db-module"
       path: "charts/django-app"
     destination:
       server: "https://kubernetes.default.svc"
