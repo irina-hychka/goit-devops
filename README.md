@@ -165,7 +165,7 @@ module "rds_aurora" {
 
 ### Core Variables
 
-  -------
+```
   Variable         Description                          Type     Default
   ---------------- ------------------------------------ -------- -------------
   identifier       Unique database identifier           string   \-
@@ -177,45 +177,43 @@ module "rds_aurora" {
   engine_version   Engine version                       string   15.4
 
   instance_class   Instance size                        string   db.t3.micro
-  -------
+```
 
 ---
 
 ### Storage
-
-  ----
+```
   Variable             Description                       Type     Default
   -------------------- --------------------------------- -------- ---------
   allocated_storage    Storage size (RDS only)           number   20
 
   storage_type         Storage type (gp2, gp3, io1)      string   gp2
-  ----
+```
 
 ---
 
 ### Credentials
-
+```
   Variable   Description         Type
   ---------- ------------------- --------
   db_name    Initial database    string
   username   DB admin username   string
   password   DB admin password   string
-
+```
 ---
 
 ### Networking
-
+```
   Variable              Description     Type
   --------------------- --------------- --------------
   subnet_ids            DB subnets      list(string)
   vpc_id                VPC ID          string
   allowed_cidr_blocks   Allowed CIDRs   list(string)
-
+```
 ---
 
 ### Configuration
-
-  --------
+```
   Variable                  Description                      Type     Default
   ------------------------- -------------------------------- -------- ---------
   multi_az                  Enable Multi-AZ (RDS only)       bool     false
@@ -223,18 +221,17 @@ module "rds_aurora" {
   backup_retention_period   Backup retention days            number   7
 
   port                      Database port                    number   5432
-  --------
-
+```
 ---
 
 ### Parameter Group Settings
-
+```
   Variable          Description                 Default
   ----------------- --------------------------- ---------
   max_connections   Max DB connections          100
   log_statement     SQL logging level           none
   work_mem          Memory per operation (KB)   4096
-
+```
 ---
 
 ## How to Change Database Configuration
