@@ -51,7 +51,7 @@ module "argo_cd" {
   cluster_ca_certificate = module.eks.cluster_ca_certificate
 
   github_repo_url      = var.github_repo_url
-  target_revision      = "lesson-8-9"
+  target_revision      = "lesson-db-module"
   app_name             = "django-app"
   app_namespace        = "django-app"
   app_chart_path       = "Project/charts/django-app"
