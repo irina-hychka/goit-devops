@@ -57,3 +57,41 @@ module "argo_cd" {
   app_chart_path       = "Project/charts/django-app"
   argocd_chart_version = "5.51.6"
 }
+
+module "rds_postgres" {
+  source = "./modules/rds"
+
+  identifier     = "lesson-db-postgres"
+  use_aurora     = false
+  engine         = "postgres"
+  engine_version = "15.10"
+  instance_class = "db.t3.micro"
+
+  db_name  = "appdb"
+  username = "dbadmin"
+  password = "SuperSecret123!"
+
+  multi_az            = false
+  subnet_ids          = module.vpc.private_subnet_ids
+  vpc_id              = module.vpc.vpc_id
+  allowed_cidr_blocks = [var.vpc_cidr_block]
+}
+
+module "rds_aurora" {
+  source = "./modules/rds"
+
+  identifier     = "lesson-db-aurora"
+  use_aurora     = true
+  engine         = "aurora-postgresql"
+  engine_version = "15.10"
+  instance_class = "db.t3.medium"
+
+  db_name  = "auroradb"
+  username = "auroraadmin"
+  password = "AuroraSecret123!"
+
+  multi_az            = false
+  subnet_ids          = module.vpc.private_subnet_ids
+  vpc_id              = module.vpc.vpc_id
+  allowed_cidr_blocks = [var.vpc_cidr_block]
+}

@@ -42,3 +42,33 @@ output "argocd_admin_password_hint" {
   description = "Command to get Argo CD initial admin password"
   value       = module.argo_cd.argocd_admin_password_hint
 }
+
+output "rds_postgres_endpoint" {
+  value       = module.rds_postgres.db_endpoint
+  description = "RDS PostgreSQL endpoint"
+}
+
+output "rds_postgres_port" {
+  value       = module.rds_postgres.db_port
+  description = "RDS PostgreSQL port"
+}
+
+output "rds_postgres_type" {
+  value       = module.rds_postgres.db_type
+  description = "RDS PostgreSQL type"
+}
+
+output "rds_aurora_endpoint" {
+  value       = module.rds_aurora.db_endpoint
+  description = "Aurora cluster endpoint"
+}
+
+output "rds_aurora_port" {
+  value       = module.rds_aurora.db_port
+  description = "Aurora cluster port"
+}
+
+output "rds_aurora_type" {
+  value       = module.rds_aurora.db_type
+  description = "Aurora database type"
+}
