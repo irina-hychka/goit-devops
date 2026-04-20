@@ -27,7 +27,7 @@ variable "github_repo_url" {
 variable "target_revision" {
   description = "Git revision for Argo CD application"
   type        = string
-  default     = "lesson-8-9"
+  default     = "lesson-db-module"
 }
 
 variable "app_name" {
