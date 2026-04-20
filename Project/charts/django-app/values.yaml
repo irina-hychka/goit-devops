@@ -4,7 +4,7 @@ replicaCount: 2
 # Container image settings
 image:
   repository: 712242347745.dkr.ecr.us-west-2.amazonaws.com/lesson-8-9-django-app
-  tag: "4"
+  tag: "5"
   pullPolicy: Always
 
 # Kubernetes Service configuration
