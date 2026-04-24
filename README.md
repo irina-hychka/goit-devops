@@ -167,6 +167,10 @@ Open: http://localhost:3000
    - Detects changes in repository
    - Automatically deploys updated application
 
+### CI/CD workflow diagram
+
+![CI/CD workflow diagram](screenshots/CI-CD-workflow-diagram.png)
+
 ---
 
 ## Module Verification
@@ -180,6 +184,12 @@ Open: http://localhost:3000
 ```bash
 kubectl get nodes
 ```
+
+#### Cluster Nodes
+
+Shows that the EKS cluster is running with multiple worker nodes.
+
+![K8s Nodes](screenshots/kubectl-get-nodes.png)
 
 ---
 
@@ -210,6 +220,18 @@ terraform output rds_postgres_endpoint
 
 ---
 
+### Application Deployment (django-app)
+
+Shows that the Django application is successfully deployed and running:
+- Pods are in `Running` state
+- Service is exposed via LoadBalancer
+- Deployment is healthy (2/2 replicas)
+- Horizontal Pod Autoscaler is configured
+
+![K8s Django App](screenshots/kubectl-django-app.png)
+
+---
+
 ### Monitoring
 
 - Prometheus targets are up
@@ -219,19 +241,69 @@ terraform output rds_postgres_endpoint
 
 ## Screenshots
 
-Screenshots are located in:
+### 1. AWS Infrastructure
 
-```
-/screenshots
-```
+#### EKS Cluster
+![EKS Cluster](screenshots/EKS-cluster.png)
 
-Naming convention:
+#### Node Group (2 nodes)
+![Node Group](screenshots/Node-group.png)
 
-- `p1_...` — Environment setup
-- `p2_...` — Infrastructure deployment
-- `p3_...` — Jenkins
-- `p4_...` — Argo CD
-- `p5_...` — Monitoring
+#### Load Balancer
+![Load Balancer](screenshots/Load-balancer.png)
+
+#### RDS (PostgreSQL)
+![RDS](screenshots/RDS.png)
+
+#### ECR Repository
+![ECR](screenshots/ECR.png)
+
+---
+
+### 2. Application
+
+#### Application in Browser
+![Application](screenshots/App-browser.png)
+
+#### Health Endpoint
+![Health Check](screenshots/App-browser-health.png)
+
+---
+
+### 3. CI/CD and Deployment
+
+#### ArgoCD Login
+![ArgoCD Login](screenshots/ArgoCD-login.png)
+
+#### ArgoCD Application (Synced & Healthy)
+![ArgoCD App](screenshots/ArgoCD-app.png)
+
+#### Jenkins Login
+![Jenkins Login](screenshots/jenkins-login.png)
+
+#### Jenkins Pipeline / App
+![Jenkins](screenshots/jenkins-app.png)
+
+---
+
+### 4. Monitoring
+
+#### Prometheus UI (Query Interface)
+![Prometheus](screenshots/Prometheus.png)
+
+#### Prometheus Targets Status (up metric)
+Shows that all monitored services are up and responding.
+![Prometheus Targets](screenshots/Prometheus-graph.png)
+
+#### Prometheus Metrics (Memory Usage)
+Container memory consumption across the cluster.
+![Prometheus Memory](screenshots/Prometheus-cpu-graph.png)
+
+#### Grafana Dashboard
+![Grafana](screenshots/Grafana.png)
+
+#### Grafana Metrics (CPU, Memory, Network)
+![Grafana Metrics](screenshots/Grafana-graphs.png)
 
 ---
 
