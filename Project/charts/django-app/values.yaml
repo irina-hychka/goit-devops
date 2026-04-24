@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: 712242347745.dkr.ecr.us-west-2.amazonaws.com/final-project-dev-django-app
-  tag: "latest"
+  tag: "3"
   pullPolicy: Always
 
 service:
