@@ -5,7 +5,7 @@ applications:
     source:
       repoURL: "https://github.com/irina-hychka/goit-devops"
       targetRevision: "final-project"
-      path: "charts/django-app"
+      path: "Project/charts/django-app"
     destination:
       server: "https://kubernetes.default.svc"
       namespace: "django-app"

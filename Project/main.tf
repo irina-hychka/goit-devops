@@ -68,7 +68,7 @@ module "argo_cd" {
   target_revision      = var.github_branch
   app_name             = "django-app"
   app_namespace        = "django-app"
-  app_chart_path       = "charts/django-app"
+  app_chart_path       = "Project/charts/django-app"
   argocd_chart_version = "5.51.6"
 }
 

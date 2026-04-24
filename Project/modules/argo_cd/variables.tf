@@ -55,5 +55,5 @@ variable "app_namespace" {
 variable "app_chart_path" {
   description = "Path to the Helm chart in the Git repository"
   type        = string
-  default     = "charts/django-app"
+  default     = "Project/charts/django-app"
 }
