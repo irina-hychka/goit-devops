@@ -11,7 +11,7 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
         GIT_REPO = 'https://github.com/irina-hychka/goit-devops'
         BRANCH = 'final-project'
-        HELM_VALUES_FILE = 'charts/django-app/values.yaml'
+        HELM_VALUES_FILE = 'Project/charts/django-app/values.yaml'
     }
 
     stages {
@@ -26,8 +26,8 @@ pipeline {
                 container('kaniko') {
                     sh """
                     /kaniko/executor \
-                      --dockerfile=Django/Dockerfile \
-                      --context=${WORKSPACE}/Django \
+                      --dockerfile=Project/Django/Dockerfile \
+                      --context=${WORKSPACE}/Project/Django \
                       --destination=${ECR_REPO}:${IMAGE_TAG} \
                       --destination=${ECR_REPO}:latest \
                       --verbosity=info

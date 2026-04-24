@@ -47,7 +47,7 @@ controller:
                         branch('*/${github_branch}')
                       }
                     }
-                    scriptPath('Django/Jenkinsfile')
+                    scriptPath('Project/Django/Jenkinsfile')
                   }
                 }
               }

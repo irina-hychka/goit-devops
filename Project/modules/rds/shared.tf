@@ -128,7 +128,7 @@ locals {
 
   parameter_group_family = local.is_postgres ? (
     var.use_aurora ? "aurora-postgresql15" : "postgres15"
-  ) : (
+    ) : (
     var.use_aurora ? "aurora-mysql8.0" : "mysql8.0"
   )
 }
