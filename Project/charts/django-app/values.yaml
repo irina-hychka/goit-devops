@@ -27,7 +27,7 @@ config:
   DJANGO_SETTINGS_MODULE: "core.settings"
   DEBUG: "False"
   ALLOWED_HOSTS: "*"
-  POSTGRES_HOST: "final-project-dev-postgres.xxxxxxxxxxxx.us-west-2.rds.amazonaws.com"
+  POSTGRES_HOST: "final-project-dev-postgres.c1kqg2g2k007.us-west-2.rds.amazonaws.com"
   POSTGRES_PORT: "5432"
   POSTGRES_DB: "appdb"
   POSTGRES_USER: "dbadmin"
