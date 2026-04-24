@@ -27,32 +27,56 @@ This project demonstrates a complete DevOps pipeline for deploying a Django appl
 
 ```
 .
-├── Django/                    # Application source code
-│   ├── Dockerfile
-│   ├── Jenkinsfile
-│   ├── docker-compose.yaml
-│   └── app/
+├── Project/
+│   ├── Django/
+│   │   ├── Dockerfile
+│   │   ├── Jenkinsfile
+│   │   ├── docker-compose.yaml
+│   │   └── app/
+│   │
+│   ├── charts/
+│   │   └── django-app/
+│   │
+│   ├── modules/
+│   │   ├── vpc/
+│   │   ├── eks/
+│   │   ├── ecr/
+│   │   ├── rds/
+│   │   ├── jenkins/
+│   │   ├── monitoring/
+│   │   ├── argo_cd/
+│   │   └── s3-backend/
+│   │
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   ├── providers.tf
+│   ├── backend.tf
+│   └── bootstrap.tf
 │
-├── charts/
-│   └── django-app/           # Helm chart for Django app
+├── screenshots/
+│   ├── App-browser.png
+│   ├── App-browser-health.png
+│   ├── EKS-cluster.png
+│   ├── Node-group.png
+│   ├── Load-balancer.png
+│   ├── RDS.png
+│   ├── ECR.png
+│   ├── jenkins-login.png
+│   ├── jenkins-app.png
+│   ├── ArgoCD-login.png
+│   ├── ArgoCD-app.png
+│   ├── Grafana.png
+│   ├── Grafana-graphs.png
+│   ├── Prometheus.png
+│   ├── Prometheus-graph.png
+│   ├── Prometheus-cpu-graph.png
+│   ├── kubectl-get-nodes.png
+│   ├── kubectl-django-app.png
+│   └── CI-CD-workflow-diagram.png
 │
-├── modules/                  # Terraform modules
-│   ├── vpc/
-│   ├── eks/
-│   ├── ecr/
-│   ├── rds/
-│   ├── jenkins/
-│   ├── argo_cd/
-│   ├── monitoring/
-│   └── s3-backend/
-│
-├── screenshots/              # Screenshots (to be added)
-│
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── providers.tf
-├── backend.tf
+├── README.md
+└── .gitignore
 ```
 
 ---
