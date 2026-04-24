@@ -6,6 +6,8 @@ resource "aws_vpc" "main" {
 
   tags = {
     Name                                        = var.vpc_name
+    Project                                     = var.project_name
+    Environment                                 = var.environment
     ManagedBy                                   = "Terraform"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
@@ -22,6 +24,8 @@ resource "aws_subnet" "public" {
 
   tags = {
     Name                                        = "${var.vpc_name}-public-${count.index + 1}"
+    Project                                     = var.project_name
+    Environment                                 = var.environment
     Type                                        = "Public"
     ManagedBy                                   = "Terraform"
     "kubernetes.io/role/elb"                    = "1"
@@ -33,12 +37,15 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   count = length(var.private_subnets)
 
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnets[count.index]
-  availability_zone = var.availability_zones[count.index]
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.private_subnets[count.index]
+  availability_zone       = var.availability_zones[count.index]
+  map_public_ip_on_launch = false
 
   tags = {
     Name                                        = "${var.vpc_name}-private-${count.index + 1}"
+    Project                                     = var.project_name
+    Environment                                 = var.environment
     Type                                        = "Private"
     ManagedBy                                   = "Terraform"
     "kubernetes.io/role/internal-elb"           = "1"
@@ -51,8 +58,10 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name      = "${var.vpc_name}-igw"
-    ManagedBy = "Terraform"
+    Name        = "${var.vpc_name}-igw"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -61,8 +70,10 @@ resource "aws_eip" "nat" {
   domain = "vpc"
 
   tags = {
-    Name      = "${var.vpc_name}-nat-eip-1"
-    ManagedBy = "Terraform"
+    Name        = "${var.vpc_name}-nat-eip-1"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 
   depends_on = [aws_internet_gateway.main]
@@ -76,7 +87,9 @@ resource "aws_nat_gateway" "main" {
   depends_on = [aws_internet_gateway.main]
 
   tags = {
-    Name      = "${var.vpc_name}-nat-1"
-    ManagedBy = "Terraform"
+    Name        = "${var.vpc_name}-nat-1"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }

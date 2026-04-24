@@ -1,3 +1,15 @@
+variable "project_name" {
+  description = "Project name"
+  type        = string
+  default     = "final-project"
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+  default     = "dev"
+}
+
 variable "aws_region" {
   description = "AWS region"
   type        = string
@@ -8,6 +20,12 @@ variable "github_repo_url" {
   description = "GitHub repository URL"
   type        = string
   default     = "https://github.com/irina-hychka/goit-devops"
+}
+
+variable "github_branch" {
+  description = "GitHub branch for Jenkins and Argo CD"
+  type        = string
+  default     = "final-project"
 }
 
 variable "cluster_version" {

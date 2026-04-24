@@ -1,15 +1,25 @@
+# Project name used for tagging resources
+variable "project_name" {
+  description = "Project name"
+  type        = string
+}
+
+# Environment name used for tagging resources
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
 # Name of the EKS cluster
 variable "cluster_name" {
   description = "Name of the EKS cluster"
   type        = string
-  default     = "lesson-8-9-eks"
 }
 
 # Kubernetes version for the EKS cluster
 variable "cluster_version" {
   description = "Kubernetes version for the EKS cluster"
   type        = string
-  default     = "1.30"
 }
 
 # ID of the VPC where the EKS cluster will be deployed
@@ -44,7 +54,6 @@ variable "private_subnet_ids" {
 variable "instance_types" {
   description = "List of EC2 instance types for the EKS node group"
   type        = list(string)
-  default     = ["t3.medium"]
 
   validation {
     condition     = length(var.instance_types) > 0
@@ -56,19 +65,16 @@ variable "instance_types" {
 variable "desired_size" {
   description = "Desired number of worker nodes"
   type        = number
-  default     = 2
 }
 
 # Minimum number of worker nodes
 variable "min_size" {
   description = "Minimum number of worker nodes"
   type        = number
-  default     = 1
 }
 
 # Maximum number of worker nodes
 variable "max_size" {
   description = "Maximum number of worker nodes"
   type        = number
-  default     = 4
 }

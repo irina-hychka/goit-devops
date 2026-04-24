@@ -1,6 +1,13 @@
 resource "kubernetes_namespace" "argocd" {
   metadata {
     name = "argocd"
+
+    labels = {
+      app         = "argocd"
+      project     = var.project_name
+      environment = var.environment
+      managed-by  = "terraform"
+    }
   }
 }
 
@@ -23,6 +30,13 @@ resource "helm_release" "argocd" {
 resource "kubernetes_namespace" "app" {
   metadata {
     name = var.app_namespace
+
+    labels = {
+      app         = var.app_name
+      project     = var.project_name
+      environment = var.environment
+      managed-by  = "terraform"
+    }
   }
 }
 
@@ -30,26 +44,32 @@ resource "kubernetes_manifest" "django_app" {
   manifest = {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
+
     metadata = {
       name      = var.app_name
       namespace = kubernetes_namespace.argocd.metadata[0].name
     }
+
     spec = {
       project = "default"
+
       source = {
         repoURL        = var.github_repo_url
         targetRevision = var.target_revision
         path           = var.app_chart_path
       }
+
       destination = {
         server    = "https://kubernetes.default.svc"
         namespace = var.app_namespace
       }
+
       syncPolicy = {
         automated = {
           prune    = true
           selfHeal = true
         }
+
         syncOptions = [
           "CreateNamespace=true"
         ]

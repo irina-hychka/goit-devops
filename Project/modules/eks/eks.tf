@@ -16,8 +16,10 @@ resource "aws_iam_role" "eks_cluster" {
   })
 
   tags = {
-    Name      = "${var.cluster_name}-cluster-role"
-    ManagedBy = "Terraform"
+    Name        = "${var.cluster_name}-cluster-role"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -45,8 +47,10 @@ resource "aws_iam_role" "eks_nodes" {
   })
 
   tags = {
-    Name      = "${var.cluster_name}-node-role"
-    ManagedBy = "Terraform"
+    Name        = "${var.cluster_name}-node-role"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -89,8 +93,10 @@ resource "aws_security_group" "eks_cluster" {
   }
 
   tags = {
-    Name      = "${var.cluster_name}-sg"
-    ManagedBy = "Terraform"
+    Name        = "${var.cluster_name}-sg"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -112,8 +118,10 @@ resource "aws_eks_cluster" "main" {
   ]
 
   tags = {
-    Name      = var.cluster_name
-    ManagedBy = "Terraform"
+    Name        = var.cluster_name
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -145,7 +153,9 @@ resource "aws_eks_node_group" "main" {
   ]
 
   tags = {
-    Name      = "${var.cluster_name}-nodes"
-    ManagedBy = "Terraform"
+    Name        = "${var.cluster_name}-nodes"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }

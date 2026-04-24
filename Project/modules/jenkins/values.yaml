@@ -44,10 +44,10 @@ controller:
                         remote {
                           url('${github_repo_url}')
                         }
-                        branch('*/lesson-db-module')
+                        branch('*/${github_branch}')
                       }
                     }
-                    scriptPath('Jenkinsfile')
+                    scriptPath('Django/Jenkinsfile')
                   }
                 }
               }

@@ -1,8 +1,19 @@
+# Project name used for tagging resources
+variable "project_name" {
+  description = "Project name"
+  type        = string
+}
+
+# Environment name used for tagging resources
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
 # CIDR block for the main VPC
 variable "vpc_cidr_block" {
   description = "CIDR block for the VPC"
   type        = string
-  default     = "10.0.0.0/16"
 }
 
 # List of CIDR blocks for public subnets
@@ -42,12 +53,10 @@ variable "availability_zones" {
 variable "vpc_name" {
   description = "Name of the VPC"
   type        = string
-  default     = "lesson-8-9-vpc"
 }
 
 # Name of the EKS cluster used for Kubernetes tagging
 variable "cluster_name" {
   description = "Name of the EKS cluster"
   type        = string
-  default     = "lesson-8-9-eks"
 }

@@ -5,8 +5,10 @@ resource "aws_db_subnet_group" "this" {
   description = "Subnet group for ${var.identifier}"
 
   tags = {
-    Name      = "${var.identifier}-subnet-group"
-    ManagedBy = "Terraform"
+    Name        = "${var.identifier}-subnet-group"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -25,6 +27,7 @@ resource "aws_security_group" "this" {
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -32,8 +35,10 @@ resource "aws_security_group" "this" {
   }
 
   tags = {
-    Name      = "${var.identifier}-sg"
-    ManagedBy = "Terraform"
+    Name        = "${var.identifier}-sg"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -70,8 +75,10 @@ resource "aws_db_parameter_group" "this" {
   }
 
   tags = {
-    Name      = "${var.identifier}-params"
-    ManagedBy = "Terraform"
+    Name        = "${var.identifier}-params"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -108,8 +115,10 @@ resource "aws_rds_cluster_parameter_group" "this" {
   }
 
   tags = {
-    Name      = "${var.identifier}-cluster-params"
-    ManagedBy = "Terraform"
+    Name        = "${var.identifier}-cluster-params"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -119,7 +128,7 @@ locals {
 
   parameter_group_family = local.is_postgres ? (
     var.use_aurora ? "aurora-postgresql15" : "postgres15"
-    ) : (
+  ) : (
     var.use_aurora ? "aurora-mysql8.0" : "mysql8.0"
   )
 }

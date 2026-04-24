@@ -19,14 +19,14 @@ db.sqlite3
 .gitignore
 
 # Docker
-Dockerfile
 .dockerignore
 
 # Terraform (не треба в образі)
-Project/
 *.tfstate
 *.tfstate.*
 .terraform/
+modules/
+charts/
 
 # IDE / OS
 .vscode/

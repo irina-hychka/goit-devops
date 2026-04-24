@@ -1,3 +1,13 @@
+variable "project_name" {
+  description = "Project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
 # Name of the S3 bucket for Terraform state
 variable "bucket_name" {
   description = "S3 bucket name for Terraform state"

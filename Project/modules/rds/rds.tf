@@ -24,9 +24,12 @@ resource "aws_db_instance" "this" {
   skip_final_snapshot     = true
   deletion_protection     = false
   backup_retention_period = var.backup_retention_period
+  apply_immediately       = true
 
   tags = {
-    Name      = var.identifier
-    ManagedBy = "Terraform"
+    Name        = var.identifier
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }

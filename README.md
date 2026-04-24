@@ -1,35 +1,25 @@
-# Homework: Flexible Terraform Module for Databases
+# Final Project — DevOps Infrastructure on AWS
 
 ## Overview
 
-This project implements a reusable and flexible Terraform module for
-deploying AWS databases.
-
-The module supports two deployment modes:
-
--   Standard RDS instance (PostgreSQL / MySQL)
--   Aurora cluster (Aurora PostgreSQL / Aurora MySQL)
-
-The behavior is controlled by a single variable:
-
-use_aurora = true \| false
-
-The module automatically provisions all required infrastructure
-components, including networking and database configuration.
+This project demonstrates a complete DevOps pipeline for deploying a Django application on AWS using modern infrastructure and automation tools. The infrastructure is provisioned with Terraform, containerization is handled via Docker, and deployment is managed through Kubernetes (EKS), Jenkins (CI), and Argo CD (CD with GitOps approach).
 
 ---
 
-## Technologies Used
+## Technology Stack
 
--   Terraform
--   AWS RDS (PostgreSQL, MySQL)
--   AWS Aurora (PostgreSQL, MySQL)
--   AWS VPC
--   AWS EKS
--   AWS ECR
--   Jenkins
--   ArgoCD
--   Helm
+- **Cloud Provider:** AWS (EKS, RDS, ECR, S3, DynamoDB)
+- **Infrastructure as Code:** Terraform
+- **Containerization:** Docker
+- **Orchestration:** Kubernetes (EKS)
+- **CI/CD:**
+  - Jenkins (CI)
+  - Argo CD (CD / GitOps)
+- **Monitoring:**
+  - Prometheus
+  - Grafana
+- **Package Manager:** Helm
+- **Application:** Django (Python)
 
 ---
 
@@ -37,306 +27,222 @@ components, including networking and database configuration.
 
 ```
 .
-├── backend.tf
-├── charts
-│   └── django-app
-│       ├── Chart.yaml
-│       ├── templates
-│       └── values.yaml
-├── main-bootstrap.tf.bak
+├── Django/                    # Application source code
+│   ├── Dockerfile
+│   ├── Jenkinsfile
+│   ├── docker-compose.yaml
+│   └── app/
+│
+├── charts/
+│   └── django-app/           # Helm chart for Django app
+│
+├── modules/                  # Terraform modules
+│   ├── vpc/
+│   ├── eks/
+│   ├── ecr/
+│   ├── rds/
+│   ├── jenkins/
+│   ├── argo_cd/
+│   ├── monitoring/
+│   └── s3-backend/
+│
+├── screenshots/              # Screenshots (to be added)
+│
 ├── main.tf
-├── modules
-│   ├── argo_cd
-│   │   ├── charts
-│   │   ├── jenkins.tf
-│   │   ├── outputs.tf
-│   │   ├── providers.tf
-│   │   ├── values.yaml
-│   │   └── variables.tf
-│   ├── ecr
-│   │   ├── ecr.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   ├── eks
-│   │   ├── aws_ebs_csi_driver.tf
-│   │   ├── eks.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   ├── jenkins
-│   │   ├── jenkins.tf
-│   │   ├── outputs.tf
-│   │   ├── providers.tf
-│   │   ├── values.yaml
-│   │   └── variables.tf
-│   ├── rds
-│   │   ├── aurora.tf
-│   │   ├── outputs.tf
-│   │   ├── rds.tf
-│   │   ├── shared.tf
-│   │   └── variables.tf
-│   ├── s3-backend
-│   │   ├── dynamodb.tf
-│   │   ├── outputs.tf
-│   │   ├── s3.tf
-│   │   └── variables.tf
-│   └── vpc
-│       ├── outputs.tf
-│       ├── routes.tf
-│       ├── variables.tf
-│       └── vpc.tf
+├── variables.tf
 ├── outputs.tf
 ├── providers.tf
-├── terraform.tfstate
-├── terraform.tfstate.backup
-└── variables.tf
+├── backend.tf
 ```
 
 ---
 
-## RDS Module Features
+## Deployment Stages
 
-The rds module provides:
+### 1. Environment Preparation
 
--   Conditional creation of:
-    -   aws_db_instance (RDS)
-    -   aws_rds_cluster + aws_rds_cluster_instance (Aurora)
--   Automatic creation of:
-    -   DB Subnet Group
-    -   Security Group
-    -   Parameter Group
--   Support for:
-    -   PostgreSQL and MySQL
-    -   Aurora PostgreSQL and Aurora MySQL
--   Configurable engine, version, instance class, and storage
+- Initialize Terraform
+- Verify variables and configuration
 
----
-
-## Example Usage
-
-### Standard RDS (PostgreSQL)
-
-```
-module "rds_postgres" {
-  source = "./modules/rds"
-
-  identifier     = "example-postgres"
-  use_aurora     = false
-  engine         = "postgres"
-  engine_version = "15.10"
-  instance_class = "db.t3.micro"
-
-  db_name  = "appdb"
-  username = "admin"
-  password = "securepassword"
-
-  subnet_ids          = module.vpc.private_subnet_ids
-  vpc_id              = module.vpc.vpc_id
-  allowed_cidr_blocks = ["10.0.0.0/16"]
-}
+```bash
+terraform init -backend=false
+terraform validate
 ```
 
 ---
 
-### Aurora Cluster
+### 2. Backend Setup (S3 + DynamoDB)
 
-```
-module "rds_aurora" {
-  source = "./modules/rds"
+Deploy backend resources for Terraform state:
 
-  identifier     = "example-aurora"
-  use_aurora     = true
-  engine         = "aurora-postgresql"
-  engine_version = "15.10"
-  instance_class = "db.t3.medium"
-
-  db_name  = "auroradb"
-  username = "admin"
-  password = "securepassword"
-
-  subnet_ids          = module.vpc.private_subnet_ids
-  vpc_id              = module.vpc.vpc_id
-  allowed_cidr_blocks = ["10.0.0.0/16"]
-}
-```
-
----
-
-## Input Variables
-
-### Core Variables
-
-```
-  Variable         Description                          Type     Default
-  ---------------- ------------------------------------ -------- -------------
-  identifier       Unique database identifier           string   \-
-
-  use_aurora       Switch between RDS and Aurora        bool     false
-
-  engine           Database engine                      string   postgres
-
-  engine_version   Engine version                       string   15.4
-
-  instance_class   Instance size                        string   db.t3.micro
-```
-
----
-
-### Storage
-```
-  Variable             Description                       Type     Default
-  -------------------- --------------------------------- -------- ---------
-  allocated_storage    Storage size (RDS only)           number   20
-
-  storage_type         Storage type (gp2, gp3, io1)      string   gp2
-```
-
----
-
-### Credentials
-```
-  Variable   Description         Type
-  ---------- ------------------- --------
-  db_name    Initial database    string
-  username   DB admin username   string
-  password   DB admin password   string
-```
----
-
-### Networking
-```
-  Variable              Description     Type
-  --------------------- --------------- --------------
-  subnet_ids            DB subnets      list(string)
-  vpc_id                VPC ID          string
-  allowed_cidr_blocks   Allowed CIDRs   list(string)
-```
----
-
-### Configuration
-```
-  Variable                  Description                      Type     Default
-  ------------------------- -------------------------------- -------- ---------
-  multi_az                  Enable Multi-AZ (RDS only)       bool     false
-
-  backup_retention_period   Backup retention days            number   7
-
-  port                      Database port                    number   5432
-```
----
-
-### Parameter Group Settings
-```
-  Variable          Description                 Default
-  ----------------- --------------------------- ---------
-  max_connections   Max DB connections          100
-  log_statement     SQL logging level           none
-  work_mem          Memory per operation (KB)   4096
-```
----
-
-## How to Change Database Configuration
-
-### Switch Between RDS and Aurora
-
-```
-use_aurora = false
-use_aurora = true
-```
-
----
-
-### Change Database Engine
-
-```
-engine = "postgres"
-engine = "mysql"
-engine = "aurora-postgresql"
-engine = "aurora-mysql"
-```
-
----
-
-### Change Instance Size
-
-```
-instance_class = "db.t3.micro"
-instance_class = "db.t3.medium"
-instance_class = "db.r6g.large"
-```
-
----
-
-### Change Engine Version
-
-```
-engine_version = "15.10"
-```
-
----
-
-## Outputs
-
--   db_endpoint
--   db_port
--   db_type
--   security_group_id
--   subnet_group_name
-
----
-
-## Notes
-
--   Aurora consists of:
-    -   Cluster (control layer)
-    -   Instance (compute layer)
--   Always connect using the cluster endpoint
--   Terraform changes are applied only via:
-
+```bash
 terraform apply
+```
+
+After that, enable backend:
+
+```bash
+terraform init
+```
+
+---
+
+### 3. Infrastructure Deployment
+
+Deploy full infrastructure:
+
+```bash
+terraform apply
+```
+
+This will create:
+
+- VPC and networking
+- EKS cluster
+- ECR repository
+- RDS PostgreSQL database
+- Jenkins (CI)
+- Argo CD (CD)
+- Monitoring stack (Prometheus + Grafana)
+
+---
+
+### 4. Kubernetes Resources Verification
+
+Check deployed resources:
+
+```bash
+kubectl get all -n jenkins
+kubectl get all -n argocd
+kubectl get all -n monitoring
+```
+
+---
+
+### 5. Access Verification
+
+#### Jenkins
+
+```bash
+kubectl port-forward svc/jenkins 8080:8080 -n jenkins
+```
+
+Open: http://localhost:8080
+
+---
+
+#### Argo CD
+
+```bash
+kubectl port-forward svc/argocd-server 8081:443 -n argocd
+```
+
+Open: https://localhost:8081
+
+---
+
+### 6. Monitoring and Metrics
+
+#### Grafana
+
+```bash
+kubectl port-forward svc/monitoring-grafana 3000:80 -n monitoring
+```
+
+Open: http://localhost:3000
+
+- Verify dashboards
+- Check metrics from Prometheus
+
+---
+
+## CI/CD Workflow
+
+1. Developer pushes code to GitHub (`final-project` branch)
+2. Jenkins:
+   - Builds Docker image
+   - Pushes image to ECR
+   - Updates Helm values (image tag)
+3. Argo CD:
+   - Detects changes in repository
+   - Automatically deploys updated application
+
+---
+
+## Module Verification
+
+### VPC
+
+- Check subnets, routing, NAT, IGW
+
+### EKS
+
+```bash
+kubectl get nodes
+```
+
+---
+
+### ECR
+
+- Verify repository and images in AWS Console
+
+---
+
+### RDS
+
+```bash
+terraform output rds_postgres_endpoint
+```
+
+---
+
+### Jenkins
+
+- Pipeline runs successfully
+- Image pushed to ECR
+
+---
+
+### Argo CD
+
+- Application status: Synced / Healthy
+
+---
+
+### Monitoring
+
+- Prometheus targets are up
+- Grafana dashboards display metrics
+
+---
+
+## Screenshots
+
+Screenshots are located in:
+
+```
+/screenshots
+```
+
+Naming convention:
+
+- `p1_...` — Environment setup
+- `p2_...` — Infrastructure deployment
+- `p3_...` — Jenkins
+- `p4_...` — Argo CD
+- `p5_...` — Monitoring
 
 ---
 
 ## Conclusion
 
-This module demonstrates a reusable and production-style approach to
-managing AWS databases with Terraform.
+This project demonstrates a full DevOps lifecycle:
 
-## Screenshots
+- Infrastructure provisioning with Terraform
+- Containerization with Docker
+- CI/CD pipeline with Jenkins and Argo CD
+- Kubernetes deployment on AWS EKS
+- Monitoring with Prometheus and Grafana
 
-### 1. Databases Overview (RDS + Aurora)
-
-Shows both deployment modes:
-- Standard RDS instance (PostgreSQL)
-- Aurora cluster with writer instance
-
-![Databases Overview](screenshots/p1_databases.png)
-
----
-
-### 2. DB Subnet Groups
-
-Each database type has its own subnet group:
-- Aurora subnet group
-- RDS subnet group
-
-![Subnet Groups](screenshots/p2_subnet_groups.png)
-
----
-
-### 3. Parameter Groups
-
-Custom parameter groups created automatically:
-- Cluster parameter group (Aurora)
-- Instance parameter group (RDS)
-
-![Parameter Groups](screenshots/p3_parameter_groups.png)
-
----
-
-### 4. Security Groups
-
-Security groups created for database access:
-- Aurora security group
-- RDS security group
-
-![Security Groups](screenshots/p4_security_groups.png)
+The solution is scalable, automated, and follows modern DevOps best practices.

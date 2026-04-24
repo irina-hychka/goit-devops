@@ -21,8 +21,10 @@ resource "aws_rds_cluster" "this" {
   apply_immediately       = true
 
   tags = {
-    Name      = var.identifier
-    ManagedBy = "Terraform"
+    Name        = var.identifier
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -40,7 +42,9 @@ resource "aws_rds_cluster_instance" "writer" {
   apply_immediately   = true
 
   tags = {
-    Name      = "${var.identifier}-writer"
-    ManagedBy = "Terraform"
+    Name        = "${var.identifier}-writer"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }

@@ -5,7 +5,7 @@ data "aws_caller_identity" "current" {}
 resource "aws_ecr_repository" "main" {
   name                 = var.ecr_name
   image_tag_mutability = var.image_tag_mutability
-  force_delete         = true
+  force_delete         = var.force_delete
 
   image_scanning_configuration {
     scan_on_push = var.scan_on_push
@@ -16,8 +16,10 @@ resource "aws_ecr_repository" "main" {
   }
 
   tags = {
-    Name      = var.ecr_name
-    ManagedBy = "Terraform"
+    Name        = var.ecr_name
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -79,6 +81,7 @@ resource "aws_ecr_repository_policy" "main" {
           "ecr:UploadLayerPart",
           "ecr:CompleteLayerUpload",
           "ecr:DescribeRepositories",
+          "ecr:DescribeImages",
           "ecr:GetRepositoryPolicy",
           "ecr:ListImages",
           "ecr:SetRepositoryPolicy"

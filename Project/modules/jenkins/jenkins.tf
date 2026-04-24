@@ -1,6 +1,13 @@
 resource "kubernetes_namespace" "jenkins" {
   metadata {
     name = "jenkins"
+
+    labels = {
+      app         = "jenkins"
+      project     = var.project_name
+      environment = var.environment
+      managed-by  = "terraform"
+    }
   }
 }
 
@@ -8,7 +15,7 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 resource "aws_iam_role" "jenkins" {
-  name = "jenkins-eks-role"
+  name = "${var.project_name}-${var.environment}-jenkins-eks-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -28,13 +35,15 @@ resource "aws_iam_role" "jenkins" {
   })
 
   tags = {
-    Name      = "jenkins-eks-role"
-    ManagedBy = "Terraform"
+    Name        = "${var.project_name}-${var.environment}-jenkins-eks-role"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
 resource "aws_iam_role_policy" "jenkins_ecr" {
-  name = "jenkins-ecr-policy"
+  name = "${var.project_name}-${var.environment}-jenkins-ecr-policy"
   role = aws_iam_role.jenkins.id
 
   policy = jsonencode({
@@ -50,7 +59,9 @@ resource "aws_iam_role_policy" "jenkins_ecr" {
           "ecr:BatchGetImage",
           "ecr:InitiateLayerUpload",
           "ecr:PutImage",
-          "ecr:UploadLayerPart"
+          "ecr:UploadLayerPart",
+          "ecr:DescribeRepositories",
+          "ecr:DescribeImages"
         ]
         Resource = "*"
       }
@@ -65,6 +76,13 @@ resource "kubernetes_service_account" "jenkins" {
 
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.jenkins.arn
+    }
+
+    labels = {
+      app         = "jenkins"
+      project     = var.project_name
+      environment = var.environment
+      managed-by  = "terraform"
     }
   }
 }
@@ -82,6 +100,7 @@ resource "helm_release" "jenkins" {
     ecr_repo_url    = var.ecr_repo_url
     aws_region      = var.aws_region
     github_repo_url = var.github_repo_url
+    github_branch   = var.github_branch
     aws_account_id  = data.aws_caller_identity.current.account_id
     service_account = kubernetes_service_account.jenkins.metadata[0].name
   })]

@@ -3,6 +3,11 @@ output "argocd_namespace" {
   value       = kubernetes_namespace.argocd.metadata[0].name
 }
 
+output "argocd_application_name" {
+  description = "Argo CD application name"
+  value       = var.app_name
+}
+
 output "argocd_server_hint" {
   description = "Command to get Argo CD LoadBalancer hostname"
   value       = "kubectl get svc -n argocd argocd-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"

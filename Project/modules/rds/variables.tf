@@ -1,3 +1,13 @@
+variable "project_name" {
+  description = "Project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
 variable "identifier" {
   type        = string
   description = "Unique identifier for the RDS instance or Aurora cluster"
@@ -25,7 +35,7 @@ variable "engine" {
 
 variable "engine_version" {
   type        = string
-  default     = "15.4"
+  default     = "15.10"
   description = "Database engine version"
 }
 

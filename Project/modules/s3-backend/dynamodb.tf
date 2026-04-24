@@ -10,7 +10,9 @@ resource "aws_dynamodb_table" "terraform_locks" {
   }
 
   tags = {
-    Name      = var.dynamodb_table_name
-    ManagedBy = "Terraform"
+    Name        = var.dynamodb_table_name
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }

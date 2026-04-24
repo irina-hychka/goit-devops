@@ -7,14 +7,14 @@ pipeline {
 
     environment {
         AWS_REGION = 'us-west-2'
-        ECR_REPO = '712242347745.dkr.ecr.us-west-2.amazonaws.com/lesson-8-9-django-app'
+        ECR_REPO = '712242347745.dkr.ecr.us-west-2.amazonaws.com/final-project-dev-django-app'
         IMAGE_TAG = "${BUILD_NUMBER}"
         GIT_REPO = 'https://github.com/irina-hychka/goit-devops'
-        BRANCH = 'lesson-db-module'
+        BRANCH = 'final-project'
+        HELM_VALUES_FILE = 'charts/django-app/values.yaml'
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 git branch: "${BRANCH}", url: "${GIT_REPO}"
@@ -26,8 +26,8 @@ pipeline {
                 container('kaniko') {
                     sh """
                     /kaniko/executor \
-                      --dockerfile=Dockerfile \
-                      --context=`pwd` \
+                      --dockerfile=Django/Dockerfile \
+                      --context=${WORKSPACE}/Django \
                       --destination=${ECR_REPO}:${IMAGE_TAG} \
                       --destination=${ECR_REPO}:latest \
                       --verbosity=info
@@ -45,15 +45,15 @@ pipeline {
                         passwordVariable: 'GIT_PASSWORD'
                     )]) {
                         sh """
-                            git config --global user.email "jenkins@example.com"
-                            git config --global user.name "jenkins"
-                            git config --global --add safe.directory /home/jenkins/agent/workspace/django-ci-cd
+                        git config --global user.email "jenkins@example.com"
+                        git config --global user.name "jenkins"
+                        git config --global --add safe.directory ${WORKSPACE}
 
-                            sed -i 's/tag: .*/tag: "${IMAGE_TAG}"/' Project/charts/django-app/values.yaml
+                        sed -i 's/tag: .*/tag: "${IMAGE_TAG}"/' ${HELM_VALUES_FILE}
 
-                            git add Project/charts/django-app/values.yaml
-                            git commit -m "Update image tag to ${IMAGE_TAG}" || true
-                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/irina-hychka/goit-devops lesson-db-module
+                        git add ${HELM_VALUES_FILE}
+                        git commit -m "Update image tag to ${IMAGE_TAG}" || true
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/irina-hychka/goit-devops ${BRANCH}
                         """
                     }
                 }

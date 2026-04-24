@@ -10,8 +10,10 @@ resource "aws_iam_openid_connect_provider" "eks" {
   url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
 
   tags = {
-    Name      = "${var.cluster_name}-oidc"
-    ManagedBy = "Terraform"
+    Name        = "${var.cluster_name}-oidc"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -42,8 +44,10 @@ resource "aws_iam_role" "ebs_csi" {
   })
 
   tags = {
-    Name      = "${var.cluster_name}-ebs-csi-role"
-    ManagedBy = "Terraform"
+    Name        = "${var.cluster_name}-ebs-csi-role"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -65,4 +69,11 @@ resource "aws_eks_addon" "ebs_csi" {
     aws_eks_node_group.main,
     aws_iam_role_policy_attachment.ebs_csi
   ]
+
+  tags = {
+    Name        = "${var.cluster_name}-ebs-csi-addon"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
+  }
 }

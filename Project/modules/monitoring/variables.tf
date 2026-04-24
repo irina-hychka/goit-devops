@@ -23,33 +23,27 @@ variable "cluster_ca_certificate" {
   type        = string
 }
 
-variable "ecr_repo_url" {
-  description = "ECR repository URL for the application image"
+variable "kube_prometheus_stack_chart_version" {
+  description = "kube-prometheus-stack Helm chart version"
   type        = string
+  default     = "58.2.2"
 }
 
-variable "aws_region" {
-  description = "AWS region"
+variable "grafana_admin_user" {
+  description = "Grafana admin username"
   type        = string
+  default     = "admin"
 }
 
-variable "github_repo_url" {
-  description = "GitHub repository URL with the application source code"
+variable "grafana_admin_password" {
+  description = "Grafana admin password"
   type        = string
+  sensitive   = true
+  default     = "admin123"
 }
 
-variable "github_branch" {
-  description = "GitHub branch used by Jenkins pipeline"
+variable "prometheus_retention" {
+  description = "Prometheus metrics retention period"
   type        = string
-  default     = "final-project"
-}
-
-variable "oidc_provider_arn" {
-  description = "ARN of the EKS OIDC provider"
-  type        = string
-}
-
-variable "oidc_provider_url" {
-  description = "URL of the EKS OIDC provider"
-  type        = string
+  default     = "7d"
 }

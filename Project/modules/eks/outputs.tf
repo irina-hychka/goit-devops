@@ -22,8 +22,7 @@ output "cluster_oidc_issuer" {
   value       = aws_eks_cluster.main.identity[0].oidc[0].issuer
 }
 
-# OIDC provider ARN for EKS.
-# Used for IRSA to give pods access to AWS (e.g., Jenkins → ECR)
+# OIDC provider ARN for IRSA (used by Jenkins, ArgoCD, etc.)
 output "oidc_provider_arn" {
   description = "ARN of the EKS OIDC provider"
   value       = aws_iam_openid_connect_provider.eks.arn

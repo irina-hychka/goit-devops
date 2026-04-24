@@ -8,8 +8,10 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name      = "${var.vpc_name}-public-rt"
-    ManagedBy = "Terraform"
+    Name        = "${var.vpc_name}-public-rt"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -31,8 +33,10 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name      = "${var.vpc_name}-private-rt"
-    ManagedBy = "Terraform"
+    Name        = "${var.vpc_name}-private-rt"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
